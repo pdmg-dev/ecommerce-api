@@ -1,10 +1,15 @@
 # app/schemas/order.py
-
+from enum import Enum
 from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel
 
+class OrderStatus(str, Enum):
+    pending = "pending"
+    processing = "processing"
+    shipped = "shipped"
+    delivered = "delivered"
 
 class OrderItemBase(BaseModel):
     product_id: int
@@ -23,8 +28,12 @@ class OrderBase(BaseModel):
 
 class OrderRead(OrderBase):
     id: int
+    status: OrderStatus
     created_at: datetime
     items: List[OrderItemRead]
 
     class Config:
         from_attributes = True
+        
+class OrderUpdateStatus(BaseModel):
+    status: OrderStatus
