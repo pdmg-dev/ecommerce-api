@@ -1,8 +1,11 @@
 # app/models/product.py
 from typing import List
-from sqlalchemy import String, Integer, Float, Boolean, Text
+
+from sqlalchemy import Boolean, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db import Base
+
 
 class Product(Base):
     __tablename__ = "products"

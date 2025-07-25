@@ -1,8 +1,10 @@
 # app/schemas/order.py
 
-from pydantic import BaseModel
-from typing import List
 from datetime import datetime
+from typing import List
+
+from pydantic import BaseModel
+
 
 class OrderItemBase(BaseModel):
     product_id: int

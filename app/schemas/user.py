@@ -2,6 +2,7 @@
 
 from pydantic import BaseModel, EmailStr
 
+
 # For incoming registration/login requests
 class UserCreate(BaseModel):
     email: EmailStr

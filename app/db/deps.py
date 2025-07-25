@@ -1,7 +1,9 @@
 # app/db/deps.py
 
-from app.db import SessionLocal
 from contextlib import contextmanager
+
+from app.db import SessionLocal
+
 
 # if using Depends in routes
 def get_db():

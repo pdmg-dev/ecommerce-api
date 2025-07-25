@@ -1,8 +1,10 @@
 # app/repositories/cart_item.py
 
+from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
-from sqlalchemy import select, delete, update
+
 from app.models.cart_item import CartItem
+
 
 class CartItemRepository:
     def __init__(self, db: Session):

@@ -1,7 +1,9 @@
 # app/schemas/product.py
 
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
+
 
 class ProductBase(BaseModel):
     name: str

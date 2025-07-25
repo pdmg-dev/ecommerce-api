@@ -1,10 +1,10 @@
 # app/main.py
 
 from fastapi import FastAPI
+
+from app.api import auth, cart, order, product
 from app.core.settings import get_settings
 from app.db.init_db import init_db
-from app.api import auth, product, cart, order
-
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, debug=settings.debug)

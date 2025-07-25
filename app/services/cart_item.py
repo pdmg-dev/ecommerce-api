@@ -1,10 +1,11 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.schemas.cart_item import CartItemCreate, CartItemUpdate
 from app.models.cart_item import CartItem
 from app.repositories.cart_item import CartItemRepository
 from app.repositories.product import ProductRepository
+from app.schemas.cart_item import CartItemCreate, CartItemUpdate
+
 
 class CartItemService:
     def __init__(self, db: Session):

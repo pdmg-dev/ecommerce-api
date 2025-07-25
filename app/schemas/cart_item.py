@@ -1,8 +1,11 @@
 # app/schemas/cart_item.py
 
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
+
 from app.schemas.product import ProductRead
+
 
 class CartItemBase(BaseModel):
     product_id: int

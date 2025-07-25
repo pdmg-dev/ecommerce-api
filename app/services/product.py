@@ -1,10 +1,12 @@
 # app/services/product.py
 
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from app.repositories.product import ProductRepository
-from app.schemas.product import ProductCreate, ProductUpdate, ProductRead
+from sqlalchemy.orm import Session
+
 from app.models.product import Product
+from app.repositories.product import ProductRepository
+from app.schemas.product import ProductCreate, ProductRead, ProductUpdate
+
 
 class ProductService:
     def __init__(self, db: Session):

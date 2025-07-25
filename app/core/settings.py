@@ -1,7 +1,9 @@
 # app/core/settings.py
 
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
     app_name: str = "ecommerce-api"

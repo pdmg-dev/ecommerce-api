@@ -1,12 +1,13 @@
 # app/services/user.py
 
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from app.schemas.user import UserCreate, UserLogin
-from app.schemas.token import Token
-from app.schemas.user import UserRead
+from sqlalchemy.orm import Session
+
 from app.repositories.user import UserRepository
-from app.utils.auth import hash_password, verify_password, create_access_token
+from app.schemas.token import Token
+from app.schemas.user import UserCreate, UserLogin, UserRead
+from app.utils.auth import create_access_token, hash_password, verify_password
+
 
 class UserService:
     def __init__(self, db: Session):
