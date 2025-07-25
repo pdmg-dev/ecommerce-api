@@ -1,9 +1,9 @@
 # app/services/order.py
 
 from sqlalchemy.orm import Session
-
+from fastapi import HTTPException, status
 from app.models.cart_item import CartItem
-from app.models.order import Order, OrderItem
+from app.models.order import Order, OrderItem, OrderStatus
 from app.models.product import Product
 from app.repositories.order import OrderRepository
 
@@ -49,3 +49,13 @@ class OrderService:
         self.repo.commit()
         self.repo.refresh(order)
         return order
+
+    def list_all_orders(self):
+        return self.repo.get_all_orders()
+
+    def change_order_status(self, order_id: int, new_status: OrderStatus):
+        order = self.repo.get_order_by_id(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        order.status = new_status
+        return self.repo.update_order_status(order)
