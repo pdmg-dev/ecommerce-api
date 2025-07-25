@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy import String, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
+from app.models.cart_item import CartItem
 
 class User(Base):
     __tablename__ = "users"
@@ -13,4 +14,4 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     
-    cart_items: Mapped["CartItem"] = relationship(back_populates="user")
+    cart_items: Mapped[List["CartItem"]] = relationship(back_populates="user")
