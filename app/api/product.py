@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.schemas.product import ProductCreate, ProductUpdate, ProductRead
 from app.services.product import ProductService
 from app.db.deps import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_admin
 from app.models.user import User
 
 router = APIRouter(prefix="/products", tags=["Products"])
@@ -25,7 +25,7 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
 def create_product(
     product_in: ProductCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_admin)
 ):
     # NOTE: Add is_admin check later
     service = ProductService(db)
@@ -36,7 +36,7 @@ def update_product(
     product_id: int,
     product_in: ProductUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_admin)
 ):
     # NOTE: Add is_admin check later
     service = ProductService(db)
@@ -46,7 +46,7 @@ def update_product(
 def delete_product(
     product_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_admin)
 ):
     # NOTE: Add is_admin check later
     service = ProductService(db)
