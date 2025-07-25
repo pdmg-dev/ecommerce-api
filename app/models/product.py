@@ -1,7 +1,7 @@
 # app/models/product.py
-
+from typing import List
 from sqlalchemy import String, Integer, Float, Boolean, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
 
 class Product(Base):
@@ -13,3 +13,6 @@ class Product(Base):
     price: Mapped[float] = mapped_column(Float, nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    
+    cart_items: Mapped[List["CartItem"]] = relationship(back_populates="product")
+

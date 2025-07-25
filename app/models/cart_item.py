@@ -10,9 +10,9 @@ class CartItem(Base):
     __tablename__ = "cart_items"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
-    quantity: Mapped[int] = mapped_column(Integer)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False)
+    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="cart_items")
-    product: Mapped["Product"] = relationship()
+    product: Mapped["Product"] = relationship(back_populates="cart_items")

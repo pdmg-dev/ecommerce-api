@@ -13,4 +13,4 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     
-    cart_items: Mapped[List["CartItem"]] = relationship(back_populates="user")
+    cart_items: Mapped["CartItem"] = relationship(back_populates="user")
