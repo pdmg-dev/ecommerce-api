@@ -2,11 +2,20 @@
 
 from datetime import datetime
 
+from sqlalchemy import Enum
+import enum
+
 from sqlalchemy import Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 
+
+class OrderStatus(str, enum.Enum):
+    pending = "pending"
+    processing = "processing"
+    shipped = "shipped"
+    delivered = "delivered"
 
 class Order(Base):
     __tablename__ = "orders"
@@ -19,6 +28,7 @@ class Order(Base):
 
     user: Mapped["User"] = relationship(back_populates="orders")
     items: Mapped[list["OrderItem"]] = relationship(back_populates="order", cascade="all, delete")
+    status: Mapped[OrderStatus] = mapped_column(Enum(OrderStatus), default=OrderStatus.pending)
 
 class OrderItem(Base):
     __tablename__ = "order_items"
