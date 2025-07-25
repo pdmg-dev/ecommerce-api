@@ -12,8 +12,10 @@ class ProductBase(BaseModel):
     quantity: int
     is_active: bool = True
 
+
 class ProductCreate(ProductBase):
     pass
+
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
@@ -21,6 +23,7 @@ class ProductUpdate(BaseModel):
     price: Optional[float] = None
     quantity: Optional[int] = None
     is_active: Optional[bool] = None
+
 
 class ProductRead(ProductBase):
     id: int

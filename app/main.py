@@ -18,10 +18,6 @@ app.include_router(cart.router)
 app.include_router(order.router)
 
 
-
 @app.get("/")
 def read_root():
-    return {
-        "message": f"{settings.app_name} is up",
-        "debug_mode": settings.debug
-    }
+    return {"message": f"{settings.app_name} is up", "debug_mode": settings.debug}

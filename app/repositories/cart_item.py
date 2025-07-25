@@ -16,8 +16,7 @@ class CartItemRepository:
 
     def get_cart_item(self, user_id: int, product_id: int):
         stmt = select(CartItem).where(
-            CartItem.user_id == user_id,
-            CartItem.product_id == product_id
+            CartItem.user_id == user_id, CartItem.product_id == product_id
         )
         return self.db.scalar(stmt)
 

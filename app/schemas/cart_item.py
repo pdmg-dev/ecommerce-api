@@ -11,11 +11,14 @@ class CartItemBase(BaseModel):
     product_id: int
     quantity: int
 
+
 class CartItemCreate(CartItemBase):
     pass
 
+
 class CartItemUpdate(BaseModel):
     quantity: int
+
 
 class CartItemRead(BaseModel):
     id: int

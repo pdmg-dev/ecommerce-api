@@ -15,6 +15,6 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
-    
+
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="user")
     orders: Mapped[List["Order"]] = relationship(back_populates="user")

@@ -16,11 +16,15 @@ class OrderRepository:
 
     def get_product_by_id(self, product_id: int):
         return self.db.query(Product).filter_by(id=product_id).first()
-    
-    
+
     def get_orders_by_user(self, user_id: int):
-        return self.db.query(Order).filter_by(user_id=user_id).order_by(Order.created_at.desc()).all()
-    
+        return (
+            self.db.query(Order)
+            .filter_by(user_id=user_id)
+            .order_by(Order.created_at.desc())
+            .all()
+        )
+
     def get_all_orders(self):
         return self.db.query(Order).order_by(Order.created_at.desc()).all()
 
@@ -37,10 +41,10 @@ class OrderRepository:
 
     def refresh(self, instance):
         self.db.refresh(instance)
-        
+
     def get_order_by_id(self, order_id: int) -> Order:
         return self.db.query(Order).filter_by(id=order_id).first()
-        
+
     def update_order_status(self, order: Order) -> Order:
         self.db.commit()
         self.db.refresh(order)

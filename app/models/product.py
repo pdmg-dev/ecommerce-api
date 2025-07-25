@@ -16,5 +16,5 @@ class Product(Base):
     price: Mapped[float] = mapped_column(Float, nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    
+
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="product")
