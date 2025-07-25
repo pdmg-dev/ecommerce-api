@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from app.core.settings import get_settings
 from app.db.init_db import init_db
-from app.api import auth, product, cart
+from app.api import auth, product, cart, order
 
 
 settings = get_settings()
@@ -15,6 +15,7 @@ init_db()
 app.include_router(auth.router)
 app.include_router(product.router)
 app.include_router(cart.router)
+app.include_router(order.router)
 
 
 
