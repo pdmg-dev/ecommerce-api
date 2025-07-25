@@ -4,8 +4,6 @@ from sqlalchemy import Integer, Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
 from datetime import datetime
-from app.models.user import User
-from app.models.product import Product
 
 class Order(Base):
     __tablename__ = "orders"

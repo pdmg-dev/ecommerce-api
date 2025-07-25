@@ -3,8 +3,7 @@ from typing import List
 from sqlalchemy import String, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
-from app.models.cart_item import CartItem
-from app.models.order import Order
+
 
 class User(Base):
     __tablename__ = "users"
