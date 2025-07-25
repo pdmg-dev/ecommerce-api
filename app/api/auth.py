@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_admin
 from app.db.deps import get_db
 from app.models.user import User
 from app.schemas.token import Token
@@ -25,3 +25,7 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserRead)
 def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.get("/admin/check")
+def admin_check(current_user: User = Depends(require_admin)):
+    return {"message": f"Welcome Admin {current_user.email}"}
