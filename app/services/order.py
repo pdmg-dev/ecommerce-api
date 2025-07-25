@@ -12,6 +12,10 @@ class OrderService:
     def __init__(self, db: Session):
         self.repo = OrderRepository(db)
         self.db = db
+        
+    def get_user_orders(self, user_id: int):
+        return self.repo.get_orders_by_user(user_id)
+
 
     def checkout(self, user_id: int):
         cart_items = self.repo.get_user_cart_items(user_id)

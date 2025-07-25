@@ -1,5 +1,5 @@
 # app/api/order.py
-
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -20,3 +20,12 @@ def checkout(
         return service.checkout(current_user.id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    
+@router.get("/", response_model=List[OrderRead])
+def list_user_orders(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    service = OrderService(db)
+    return service.get_user_orders(current_user.id)

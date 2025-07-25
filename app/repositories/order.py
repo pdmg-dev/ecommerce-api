@@ -16,6 +16,9 @@ class OrderRepository:
 
     def get_product_by_id(self, product_id: int):
         return self.db.query(Product).filter_by(id=product_id).first()
+    
+    def get_orders_by_user(self, user_id: int):
+        return self.db.query(Order).filter_by(user_id=user_id).order_by(Order.created_at.desc()).all()
 
     def create_order(self, user_id: int, total_price: float, items: list[OrderItem]):
         order = Order(user_id=user_id, total_price=total_price, items=items)
