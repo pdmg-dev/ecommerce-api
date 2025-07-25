@@ -4,6 +4,7 @@ from sqlalchemy import String, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
 from app.models.cart_item import CartItem
+from app.models.order import Order
 
 class User(Base):
     __tablename__ = "users"
@@ -15,3 +16,4 @@ class User(Base):
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="user")
+    orders: Mapped[List["Order"]] = relationship(back_populates="user")
