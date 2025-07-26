@@ -30,6 +30,7 @@ def get_current_user(
     except JWTError:
         raise Exception.unauthorized("Invalid or expired token")
 
+
 def require_admin(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.is_admin:
         raise Exception.forbidden("Admin privileges required")

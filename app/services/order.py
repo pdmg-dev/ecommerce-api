@@ -29,7 +29,9 @@ class OrderService:
         for item in cart_items:
             product = self.repo.get_product_by_id(item.product_id)
             if not product or product.quantity < item.quantity:
-                raise Exception.bad_request(f"Not enough stock for product ID {item.product_id}.")
+                raise Exception.bad_request(
+                    f"Not enough stock for product ID {item.product_id}."
+                )
 
             total += product.price * item.quantity
 
