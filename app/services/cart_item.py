@@ -5,6 +5,7 @@ from app.models.cart_item import CartItem
 from app.repositories.cart_item import CartItemRepository
 from app.repositories.product import ProductRepository
 from app.schemas.cart_item import CartItemCreate, CartItemUpdate
+from app.utils.exception import Exception
 
 
 class CartItemService:
@@ -18,7 +19,7 @@ class CartItemService:
     def add_to_cart(self, user_id: int, data: CartItemCreate):
         product = self.product_repo.get_by_id(data.product_id)
         if not product:
-            raise HTTPException(status_code=404, detail="Product not found")
+            raise Exception.not_found("Product not found")
 
         existing = self.repo.get_cart_item(user_id, data.product_id)
         if existing:
@@ -36,11 +37,11 @@ class CartItemService:
     def update_cart_item(self, user_id: int, product_id: int, data: CartItemUpdate):
         item = self.repo.get_cart_item(user_id, product_id)
         if not item:
-            raise HTTPException(status_code=404, detail="Cart item not found")
+            raise Exception.not_found("Cart item not found")
         return self.repo.update_quantity(item, data.quantity)
 
     def remove_from_cart(self, user_id: int, product_id: int):
         item = self.repo.get_cart_item(user_id, product_id)
         if not item:
-            raise HTTPException(status_code=404, detail="Cart item not found")
+            raise Exception.not_found("Cart item not found")
         self.repo.delete_item(item)

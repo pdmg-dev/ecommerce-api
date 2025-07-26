@@ -7,6 +7,7 @@ from app.models.cart_item import CartItem
 from app.models.order import Order, OrderItem, OrderStatus
 from app.models.product import Product
 from app.repositories.order import OrderRepository
+from app.utils.exception import Exception
 
 
 class OrderService:
@@ -20,7 +21,7 @@ class OrderService:
     def checkout(self, user_id: int):
         cart_items = self.repo.get_user_cart_items(user_id)
         if not cart_items:
-            raise ValueError("Cart is empty.")
+            raise Exception.bad_request("Cart is empty.")
 
         total = 0.0
         order_items = []
@@ -28,7 +29,7 @@ class OrderService:
         for item in cart_items:
             product = self.repo.get_product_by_id(item.product_id)
             if not product or product.quantity < item.quantity:
-                raise ValueError(f"Not enough stock for product ID {item.product_id}.")
+                raise Exception.bad_request(f"Not enough stock for product ID {item.product_id}.")
 
             total += product.price * item.quantity
 
@@ -58,6 +59,6 @@ class OrderService:
     def change_order_status(self, order_id: int, new_status: OrderStatus):
         order = self.repo.get_order_by_id(order_id)
         if not order:
-            raise HTTPException(status_code=404, detail="Order not found")
+            raise Exception.not_found("Order not found")
         order.status = new_status
         return self.repo.update_order_status(order)
