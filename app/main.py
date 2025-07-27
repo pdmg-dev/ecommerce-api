@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from app.api import auth, cart, order, product
+from app.api import auth, cart, order, product, payment
 from app.core.settings import get_settings
 from app.db.init_db import init_db
 
@@ -16,6 +16,7 @@ app.include_router(auth.router)
 app.include_router(product.router)
 app.include_router(cart.router)
 app.include_router(order.router)
+app.include_router(payment.router)
 
 
 @app.get("/")
