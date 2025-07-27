@@ -48,7 +48,7 @@ class OrderService:
                 order_id=order.id,
                 product_id=item.product_id,
                 quantity=item.quantity,
-                unit_price=item.product.price
+                price_at_purchase=item.product.price
             )
             self.db.add(order_item)
 
