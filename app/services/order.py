@@ -64,3 +64,31 @@ class OrderService:
             raise Exception.not_found("Order not found")
         order.status = new_status
         return self.repo.update_order_status(order)
+    
+    def create_order_from_cart(self, user_id: int) -> Order:
+        cart_items = (
+            self.db.query(CartItem)
+            .filter(CartItem.user_id == user_id)
+            .all()
+        )
+
+        if not cart_items:
+            raise Exception.bad_request("Cart is empty.")
+
+        order = Order(user_id=user_id, total_price=sum(item.quantity * item.product.price for item in cart_items))
+        self.db.add(order)
+        self.db.flush()  # To get order.id
+
+        for item in cart_items:
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=item.product_id,
+                quantity=item.quantity,
+                unit_price=item.product.price
+            )
+            self.db.add(order_item)
+
+        # Clear cart
+        self.db.query(CartItem).filter(CartItem.user_id == user_id).delete()
+        self.db.commit()
+        return order
