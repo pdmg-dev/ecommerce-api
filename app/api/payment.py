@@ -32,7 +32,7 @@ def create_checkout_session(
 
 
 @router.post("/webhook")
-async def stripe_webhook(request: Request):
+async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
 
@@ -48,7 +48,6 @@ async def stripe_webhook(request: Request):
         session = event["data"]["object"]
         user_id = int(session["metadata"]["user_id"])
         
-        db = next(get_db())  # or use Depends if preferred
         service = OrderService(db)
         service.create_order_from_cart(user_id)
 
