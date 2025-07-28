@@ -8,9 +8,12 @@ from app.core.security import oauth2_scheme
 from app.db.deps import get_db
 from app.models.user import User
 from app.repositories.cart import CartRepository
+from app.repositories.order import OrderRepository
 from app.repositories.product import ProductRepository
 from app.repositories.user import UserRepository
 from app.services.cart import CartService
+from app.services.order import OrderService
+from app.services.payment import PaymentService
 from app.services.product import ProductService
 from app.services.user import UserService
 from app.utils import exceptions
@@ -75,3 +78,19 @@ def get_cart_service(
     product_repository: ProductRepository = Depends(get_product_repository),
 ):
     return CartService(cart_repository, product_repository)
+
+
+# Payment Dependencies
+def get_payment_service(cart_repository: CartRepository = Depends(get_cart_repository)):
+    return PaymentService(cart_repository)
+
+
+# Order Dependencies
+def get_order_repository(db: Session = Depends(get_db)):
+    return OrderRepository(db)
+
+
+def get_order_service(
+    order_repository: OrderRepository = Depends(get_order_repository),
+):
+    return OrderService(order_repository)
