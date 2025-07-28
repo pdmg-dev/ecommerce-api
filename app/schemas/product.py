@@ -31,6 +31,7 @@ class ProductRead(ProductBase):
     class Config:
         from_attributes = True
 
+
 class ProductPublicRead(BaseModel):
     id: int
     name: str

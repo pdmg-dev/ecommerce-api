@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, status
 
 from app.core.dependencies import get_product_service, require_admin
 from app.models.user import User
-from app.schemas.product import ProductCreate, ProductRead, ProductUpdate, ProductPublicRead
+from app.schemas.product import (ProductCreate, ProductPublicRead, ProductRead,
+                                 ProductUpdate)
 from app.services.product import ProductService
 
 router = APIRouter(prefix="/products", tags=["Products"])
@@ -16,7 +17,9 @@ def list_products(product_service: ProductService = Depends(get_product_service)
 
 
 @router.get("/{product_id}", response_model=ProductRead, status_code=status.HTTP_200_OK)
-def get_product(product_id: int, product_service: ProductService = Depends(get_product_service)):
+def get_product(
+    product_id: int, product_service: ProductService = Depends(get_product_service)
+):
     return product_service.get_product(product_id)
 
 
