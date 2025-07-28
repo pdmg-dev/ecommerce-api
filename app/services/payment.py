@@ -1,22 +1,28 @@
+# app/services/payment.py
+from typing import Any, Dict
+
 import stripe
+from stripe import StripeError, checkout
 
 from app.core.settings import get_settings
 from app.models.user import User
-from app.repositories.cart_item import CartItemRepository
+from app.repositories.cart import CartRepository
 from app.utils import exceptions
 
 settings = get_settings()
-stripe.api_key = settings.stripe_secret_key
 
 
 class PaymentService:
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, cart_repository: CartRepository) -> None:
+        self.cart_repository = cart_repository
 
-    def create_checkout_session(self, user: User):
-        cart_repo = CartItemRepository(self.db)
-        cart_items = cart_repo.get_user_cart_items(user.id)
+    def configure_stripe(self) -> None:
+        stripe.api_key = settings.stripe_secret_key
 
+    def create_checkout_session(self, user: User) -> Dict[str, Any]:
+        self.configure_stripe()
+
+        cart_items = self.cart_repository.get_all_items(user.id)
         if not cart_items:
             raise exceptions.bad_request("Cart is empty")
 
@@ -25,22 +31,22 @@ class PaymentService:
                 "price_data": {
                     "currency": "usd",
                     "product_data": {"name": item.product.name},
-                    "unit_amount": int(item.product.price * 100),  # in cents
+                    "unit_amount": int(item.product.price * 100),
                 },
                 "quantity": item.quantity,
             }
             for item in cart_items
         ]
 
-        session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            line_items=line_items,
-            mode="payment",
-            # success_url=f"{settings.frontend_domain}/success?session_id={{CHECKOUT_SESSION_ID}}",
-            # cancel_url=f"{settings.frontend_domain}/cancel",
-            success_url="http://localhost:8000/payment/success",
-            cancel_url="http://localhost:8000/payment/cancel",
-            metadata={"user_id": str(user.id)},
-        )
-
-        return {"checkout_url": session.url}
+        try:
+            session = checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=line_items,
+                mode="payment",
+                success_url=f"{settings.base_url}/payment/success",
+                cancel_url=f"{settings.base_url}/payment/cancel",
+                metadata={"user_id": str(user.id)},
+            )
+            return {"checkout_url": session.url}
+        except StripeError as e:
+            raise exceptions.bad_gateway(f"Stripe: {str(e)}")
