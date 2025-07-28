@@ -10,12 +10,7 @@ from app.core.settings import get_settings
 
 settings = get_settings()
 
-# password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# =========================
-# Password Hashing
-# =========================
 
 
 def hash_password(password: str) -> str:
@@ -24,11 +19,6 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
-
-
-# =========================
-# JWT Token Functions
-# =========================
 
 
 def create_access_token(data: dict, expires_delta: Union[int, None] = None):

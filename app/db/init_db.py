@@ -1,8 +1,7 @@
 # app/db/init_db.py
 
 from app.db import Base, engine
-from app.models import (cart_item, order, product,  # ensure model is imported
-                        user)
+from app.models import cart_item, order, product, user
 
 
 def init_db():

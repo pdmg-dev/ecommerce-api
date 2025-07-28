@@ -1,11 +1,13 @@
 import stripe
+
 from app.core.settings import get_settings
 from app.models.user import User
 from app.repositories.cart_item import CartItemRepository
-from app.utils.exception import Exception
+from app.utils import exceptions
 
 settings = get_settings()
 stripe.api_key = settings.stripe_secret_key
+
 
 class PaymentService:
     def __init__(self, db):
@@ -16,7 +18,7 @@ class PaymentService:
         cart_items = cart_repo.get_user_cart_items(user.id)
 
         if not cart_items:
-            raise Exception.bad_request("Cart is empty")
+            raise exceptions.bad_request("Cart is empty")
 
         line_items = [
             {
@@ -38,7 +40,7 @@ class PaymentService:
             # cancel_url=f"{settings.frontend_domain}/cancel",
             success_url="http://localhost:8000/payment/success",
             cancel_url="http://localhost:8000/payment/cancel",
-            metadata={"user_id": str(user.id)}
+            metadata={"user_id": str(user.id)},
         )
 
         return {"checkout_url": session.url}

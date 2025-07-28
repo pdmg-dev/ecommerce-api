@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.models.product import Product
 from app.repositories.product import ProductRepository
 from app.schemas.product import ProductCreate, ProductRead, ProductUpdate
-from app.utils.exception import Exception
+from app.utils import exceptions
 
 
 class ProductService:
@@ -20,7 +20,7 @@ class ProductService:
     def get_product(self, product_id: int) -> ProductRead:
         product = self.repo.get_by_id(product_id)
         if not product or not product.is_active:
-            raise Exception.not_found("Product not found")
+            raise exceptions.not_found("Product not found")
         return ProductRead.model_validate(product)
 
     def create_product(self, data: ProductCreate) -> ProductRead:
@@ -30,12 +30,12 @@ class ProductService:
     def update_product(self, product_id: int, data: ProductUpdate) -> ProductRead:
         product = self.repo.get_by_id(product_id)
         if not product:
-            raise Exception.not_found("Product not found")
+            raise exceptions.not_found("Product not found")
         updated = self.repo.update(product, data)
         return ProductRead.model_validate(updated)
 
     def delete_product(self, product_id: int):
         product = self.repo.get_by_id(product_id)
         if not product:
-            raise Exception.not_found("Product not found")
+            raise exceptions.not_found("Product not found")
         self.repo.delete(product)

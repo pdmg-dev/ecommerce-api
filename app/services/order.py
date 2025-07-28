@@ -1,13 +1,12 @@
 # app/services/order.py
 
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.models.cart_item import CartItem
 from app.models.order import Order, OrderItem, OrderStatus
 from app.models.product import Product
 from app.repositories.order import OrderRepository
-from app.utils.exception import Exception
+from app.utils import exceptions
 
 
 class OrderService:
@@ -24,22 +23,21 @@ class OrderService:
     def change_order_status(self, order_id: int, new_status: OrderStatus):
         order = self.repo.get_order_by_id(order_id)
         if not order:
-            raise Exception.not_found("Order not found")
+            raise exceptions.not_found("Order not found")
         order.status = new_status
         return self.repo.update_order_status(order)
-    
+
     def create_order_from_cart(self, user_id: int) -> Order:
-        cart_items = (
-            self.db.query(CartItem)
-            .filter(CartItem.user_id == user_id)
-            .all()
-        )
+        cart_items = self.db.query(CartItem).filter(CartItem.user_id == user_id).all()
 
         if not cart_items:
             print(f"[Webhook] User {user_id} has empty cart. Skipping order creation.")
             return None
 
-        order = Order(user_id=user_id, total_price=sum(item.quantity * item.product.price for item in cart_items))
+        order = Order(
+            user_id=user_id,
+            total_price=sum(item.quantity * item.product.price for item in cart_items),
+        )
         self.db.add(order)
         self.db.flush()  # To get order.id
 
@@ -48,7 +46,7 @@ class OrderService:
                 order_id=order.id,
                 product_id=item.product_id,
                 quantity=item.quantity,
-                price_at_purchase=item.product.price
+                price_at_purchase=item.product.price,
             )
             self.db.add(order_item)
 
@@ -56,9 +54,9 @@ class OrderService:
         self.db.query(CartItem).filter(CartItem.user_id == user_id).delete()
         self.db.commit()
         return order
-    
-    # DEPRECATED: Use create_order_from_cart via Stripe webhook instead
-    #   def checkout(self, user_id: int):
+
+        # DEPRECATED: Use create_order_from_cart via Stripe webhook instead
+        #   def checkout(self, user_id: int):
         cart_items = self.repo.get_user_cart_items(user_id)
         if not cart_items:
             raise Exception.bad_request("Cart is empty.")
@@ -94,4 +92,3 @@ class OrderService:
         self.repo.commit()
         self.repo.refresh(order)
         return order
-

@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, Request
-from sqlalchemy.orm import Session
-from app.core.dependencies import get_db, get_current_user
-from app.models.user import User
-from app.services.payment import PaymentService
-from app.services.order import OrderService
-import stripe
 import os
-from app.utils.exception import Exception
-from stripe import error
-from app.core.settings import get_settings
-from fastapi.responses import HTMLResponse
 
+import stripe
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import HTMLResponse
+from sqlalchemy.orm import Session
+from stripe import error
+
+from app.core.dependencies import get_current_user, get_db
+from app.core.settings import get_settings
+from app.models.user import User
+from app.services.order import OrderService
+from app.services.payment import PaymentService
+from app.utils import exceptions
 
 router = APIRouter(prefix="/payment", tags=["Payment"])
 
@@ -21,6 +22,7 @@ settings = get_settings()
 stripe.api_key = settings.stripe_secret_key
 endpoint_secret = settings.stripe_webhook_secret
 
+
 @router.post("/checkout")
 def create_checkout_session(
     db: Session = Depends(get_db),
@@ -28,7 +30,6 @@ def create_checkout_session(
 ):
     service = PaymentService(db)
     return service.create_checkout_session(current_user)
-
 
 
 @router.post("/webhook")
@@ -41,13 +42,13 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
             payload=payload, sig_header=sig_header, secret=endpoint_secret
         )
     except error.SignatureVerificationError:
-        raise Exception.bad_request("Invalid signature")
+        raise exceptions.bad_request("Invalid signature")
 
     # Handle successful payment
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
         user_id = int(session["metadata"]["user_id"])
-        
+
         service = OrderService(db)
         service.create_order_from_cart(user_id)
 
@@ -57,6 +58,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
 @router.get("/success", response_class=HTMLResponse)
 def payment_success():
     return "<h1>Payment Successful</h1><p>Thank you for your purchase.</p>"
+
 
 @router.get("/cancel", response_class=HTMLResponse)
 def payment_cancel():
