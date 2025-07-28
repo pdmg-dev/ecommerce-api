@@ -7,7 +7,9 @@ from sqlalchemy.orm import Session
 from app.core.security import oauth2_scheme
 from app.db.deps import get_db
 from app.models.user import User
+from app.repositories.product import ProductRepository
 from app.repositories.user import UserRepository
+from app.services.product import ProductService
 from app.services.user import UserService
 from app.utils import exceptions
 from app.utils.auth import decode_access_token
@@ -19,9 +21,9 @@ def get_user_repository(db: Session = Depends(get_db)) -> UserRepository:
 
 
 def get_user_service(
-    repo: UserRepository = Depends(get_user_repository),
+    user_repository: UserRepository = Depends(get_user_repository),
 ) -> UserService:
-    return UserService(repo)
+    return UserService(user_repository)
 
 
 def get_current_user(
@@ -48,3 +50,14 @@ def require_admin(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.is_admin:
         raise exceptions.forbidden("Admin privileges required")
     return current_user
+
+
+# Product Dependencies
+def get_product_repository(db: Session = Depends(get_db)):
+    return ProductRepository(db)
+
+
+def get_product_service(
+    product_repository: ProductRepository = Depends(get_product_repository),
+):
+    return ProductService(product_repository)
