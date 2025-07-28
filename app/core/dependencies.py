@@ -7,12 +7,12 @@ from sqlalchemy.orm import Session
 from app.core.security import oauth2_scheme
 from app.db.deps import get_db
 from app.models.user import User
+from app.repositories.cart import CartRepository
 from app.repositories.product import ProductRepository
 from app.repositories.user import UserRepository
+from app.services.cart import CartService
 from app.services.product import ProductService
 from app.services.user import UserService
-from app.repositories.cart import CartRepository
-from app.services.cart import CartService
 from app.utils import exceptions
 from app.utils.auth import decode_access_token
 
@@ -70,5 +70,8 @@ def get_cart_repository(db: Session = Depends(get_db)):
     return CartRepository(db)
 
 
-def get_cart_service(cart_repository: CartRepository = Depends(get_cart_repository)):
-    return CartService(cart_repository)
+def get_cart_service(
+    cart_repository: CartRepository = Depends(get_cart_repository),
+    product_repository: ProductRepository = Depends(get_product_repository),
+):
+    return CartService(cart_repository, product_repository)
