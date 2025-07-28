@@ -38,9 +38,7 @@ def update_cart_item(
     cart_service: CartService = Depends(get_cart_service),
     current_user: User = Depends(get_current_user),
 ):
-    return cart_service.update_item_quantity(
-        current_user.id, product_id, update_data
-    )
+    return cart_service.update_item_quantity(current_user.id, product_id, update_data)
 
 
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -50,4 +48,4 @@ def remove_cart_item(
     current_user: User = Depends(get_current_user),
 ):
     cart_service.remove_item(current_user.id, product_id)
-    return 
+    return
