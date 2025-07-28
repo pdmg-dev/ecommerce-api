@@ -53,4 +53,4 @@ class CartService:
         item = self.cart_repository.get_item(user_id, product_id)
         if not item:
             raise exceptions.not_found("Cart item not found")
-        self.cart_repository.delete_item(item)
+        return self.cart_repository.delete_item(item)
