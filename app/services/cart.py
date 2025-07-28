@@ -25,13 +25,13 @@ class CartService:
         if not product:
             raise exceptions.not_found("Product not found")
         if create_data.quantity > product.quantity:
-            raise exceptions.bad_request("Requested quantity exceeds available stock")
+            raise exceptions.bad_request("Quantity exceeds available stock")
 
         existing_item = self.cart_repository.get_item(user_id, product.id)
         if existing_item:
             new_quantity = existing_item.quantity + create_data.quantity
             if new_quantity > product.quantity:
-                raise exceptions.bad_request("Updated quantity exceeds available stock")
+                raise exceptions.bad_request("Quantity exceeds available stock")
             return self.cart_repository.update_quantity(existing_item, new_quantity)
 
         new_item = CartItem(
