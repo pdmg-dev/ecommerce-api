@@ -17,3 +17,7 @@ def forbidden(detail: str) -> HTTPException:
 
 def not_found(detail: str) -> HTTPException:
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+
+
+def bad_gateway(detail: str) -> HTTPException:
+    return HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=detail)
