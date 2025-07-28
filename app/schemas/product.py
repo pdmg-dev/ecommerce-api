@@ -30,3 +30,12 @@ class ProductRead(ProductBase):
 
     class Config:
         from_attributes = True
+
+class ProductPublicRead(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    price: float
+
+    class Config:
+        from_attributes = True
