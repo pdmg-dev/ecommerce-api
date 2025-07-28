@@ -1,33 +1,36 @@
 # app/services/user.py
 
-from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
-
+from app.models.user import User
 from app.repositories.user import UserRepository
 from app.schemas.token import Token
 from app.schemas.user import UserCreate, UserLogin, UserRead
-from app.utils.auth import create_access_token, hash_password, verify_password
-from app.utils.exception import Exception
+from app.utils import auth, exceptions
 
 
 class UserService:
-    def __init__(self, db: Session):
-        self.repo = UserRepository(db)
+    def __init__(self, user_repository: UserRepository):
+        self.user_repository = user_repository
 
-    def register_user(self, user_data: UserCreate) -> UserRead:
-        existing_user = self.repo.get_by_email(user_data.email)
+    def register_user(self, registration_data: UserCreate) -> UserRead:
+        existing_user = self.user_repository.get_by_email(registration_data.email)
         if existing_user:
-            raise Exception.bad_request("Email already registered")
+            raise exceptions.bad_request("Email already registered")
 
-        hashed_pw = hash_password(user_data.password)
-        user = self.repo.create(user_data, hashed_pw)
+        hashed_password = auth.hash_password(registration_data.password)
+        new_user = User(
+            **registration_data.model_dump(exclude={"password"}),
+            hashed_password=hashed_password
+        )
 
-        return UserRead.model_validate(user)
+        saved_user = self.user_repository.create(new_user)
+        return UserRead.model_validate(saved_user)
 
-    def authenticate_user(self, credentials: UserLogin) -> Token:
-        user = self.repo.get_by_email(credentials.email)
-        if not user or not verify_password(credentials.password, user.hashed_password):
-            raise Exception.unauthorized("Invalid email or password")
+    def authenticate_user(self, login_data: UserLogin) -> Token:
+        user = self.user_repository.get_by_email(login_data.email)
+        if not user or not auth.verify_password(
+            login_data.password, hashed_password=user.hashed_password
+        ):
+            raise exceptions.unauthorized("Invalid email or password")
 
-        access_token = create_access_token({"sub": user.email})
+        access_token = auth.create_access_token({"sub": user.email})
         return Token(access_token=access_token)
