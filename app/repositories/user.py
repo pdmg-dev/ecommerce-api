@@ -2,10 +2,10 @@
 
 from typing import Optional
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.user import User
-from app.schemas.user import UserCreate
 
 
 class UserRepository:
@@ -13,10 +13,10 @@ class UserRepository:
         self.db = db
 
     def get_by_email(self, email: str) -> Optional[User]:
-        return self.db.query(User).filter(User.email == email).first()
+        stmt = select(User).where(User.email == email)
+        return self.db.scalars(stmt).one_or_none()
 
-    def create(self, user_data: UserCreate, hashed_password: str) -> User:
-        user = User(email=user_data.email, hashed_password=hashed_password)
+    def create(self, user: User) -> User:
         self.db.add(user)
         self.db.commit()
         self.db.refresh(user)
