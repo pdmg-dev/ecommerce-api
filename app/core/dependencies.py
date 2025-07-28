@@ -11,6 +11,8 @@ from app.repositories.product import ProductRepository
 from app.repositories.user import UserRepository
 from app.services.product import ProductService
 from app.services.user import UserService
+from app.repositories.cart import CartRepository
+from app.services.cart import CartService
 from app.utils import exceptions
 from app.utils.auth import decode_access_token
 
@@ -61,3 +63,12 @@ def get_product_service(
     product_repository: ProductRepository = Depends(get_product_repository),
 ):
     return ProductService(product_repository)
+
+
+# Cart Dependencies
+def get_cart_repository(db: Session = Depends(get_db)):
+    return CartRepository(db)
+
+
+def get_cart_service(cart_repository: CartRepository = Depends(get_cart_repository)):
+    return CartService(cart_repository)
