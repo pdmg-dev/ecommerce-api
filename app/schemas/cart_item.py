@@ -1,7 +1,5 @@
 # app/schemas/cart_item.py
 
-from typing import Optional
-
 from pydantic import BaseModel
 
 from app.schemas.product import ProductRead
