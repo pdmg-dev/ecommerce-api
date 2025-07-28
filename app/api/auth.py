@@ -1,6 +1,6 @@
 # app/api/auth.py
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.core.dependencies import get_current_user, get_user_service
 from app.models.user import User
@@ -11,16 +11,16 @@ from app.services.user import UserService
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-@router.post("/register", response_model=UserRead, status_code=201)
+@router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, service: UserService = Depends(get_user_service)):
     return service.register_user(user_data)
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=Token, status_code=status.HTTP_200_OK)
 def login(credentials: UserLogin, service: UserService = Depends(get_user_service)):
     return service.authenticate_user(credentials)
 
 
-@router.get("/me", response_model=UserRead)
+@router.get("/me", response_model=UserRead, status_code=status.HTTP_200_OK)
 def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
