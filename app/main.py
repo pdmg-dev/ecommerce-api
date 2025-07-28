@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from app.api import auth, cart, order, product, payment
+from app.api import auth, cart, order, payment, product
 from app.core.settings import get_settings
 from app.db.init_db import init_db
 
@@ -11,7 +11,6 @@ app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 init_db()
 
-# include routes
 app.include_router(auth.router)
 app.include_router(product.router)
 app.include_router(cart.router)
@@ -20,5 +19,5 @@ app.include_router(payment.router)
 
 
 @app.get("/")
-def read_root():
+def root():
     return {"message": f"{settings.app_name} is up", "debug_mode": settings.debug}
