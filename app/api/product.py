@@ -29,7 +29,7 @@ def create_product(
     product_service: ProductService = Depends(get_product_service),
     current_user: User = Depends(require_admin),
 ):
-    return product_service.create_product(product_data)
+    return product_service.create_product(create_data)
 
 
 @router.patch(
@@ -41,7 +41,7 @@ def update_product(
     product_service: ProductService = Depends(get_product_service),
     current_user: User = Depends(require_admin),
 ):
-    return product_service.update_product(product_id, product_data)
+    return product_service.update_product(product_id, update_data)
 
 
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
