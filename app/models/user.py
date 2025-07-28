@@ -1,10 +1,14 @@
 # app/models/user.py
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import Boolean, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
+
+if TYPE_CHECKING:
+    from app.models.cart_item import CartItem
+    from app.models.order import Order
 
 
 class User(Base):

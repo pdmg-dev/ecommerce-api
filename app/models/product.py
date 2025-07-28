@@ -1,10 +1,13 @@
 # app/models/product.py
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import Boolean, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
+
+if TYPE_CHECKING:
+    from app.models.cart_item import CartItem
 
 
 class Product(Base):
