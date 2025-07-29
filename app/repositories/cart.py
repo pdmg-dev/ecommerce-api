@@ -1,9 +1,10 @@
 # app/repositories/cart_item.py
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
 from app.models.cart_item import CartItem
+from app.models.user import User
 
 
 class CartRepository:
@@ -35,3 +36,9 @@ class CartRepository:
     def delete_item(self, item: CartItem):
         self.db.delete(item)
         self.db.commit()
+        
+    def remove_all_items(self, user_id: int):
+        stmt = delete(CartItem).where(CartItem.user_id == user_id)
+        self.db.execute(stmt)
+        self.db.commit()
+        
