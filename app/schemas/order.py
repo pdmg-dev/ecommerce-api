@@ -35,6 +35,7 @@ class OrderRead(OrderBase):
     id: int
     status: OrderStatus
     created_at: datetime
+    updated_at: datetime
     items: List[OrderItemRead]
 
     class Config:
