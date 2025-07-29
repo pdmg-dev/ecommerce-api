@@ -91,6 +91,7 @@ def get_order_repository(db: Session = Depends(get_db)):
 
 
 def get_order_service(
+    cart_repository: CartRepository = Depends(get_cart_repository),
     order_repository: OrderRepository = Depends(get_order_repository),
 ):
-    return OrderService(order_repository)
+    return OrderService(cart_repository, order_repository)
