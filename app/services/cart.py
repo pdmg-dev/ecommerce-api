@@ -47,6 +47,9 @@ class CartService:
         item = self.cart_repository.get_item(user_id, product_id)
         if not item:
             raise exceptions.not_found("Cart item not found")
+        product = self.product_repository.get_by_id(product_id)
+        if update_data.quantity > product.quantity:
+            raise exceptions.bad_request("Quantity exceeds available stock")    
         return self.cart_repository.update_quantity(item, update_data.quantity)
 
     def remove_item(self, user_id: int, product_id: int):
