@@ -36,9 +36,8 @@ class CartRepository:
     def delete_item(self, item: CartItem):
         self.db.delete(item)
         self.db.commit()
-        
+
     def remove_all_items(self, user_id: int):
         stmt = delete(CartItem).where(CartItem.user_id == user_id)
         self.db.execute(stmt)
         self.db.commit()
-        

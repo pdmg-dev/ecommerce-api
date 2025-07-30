@@ -22,5 +22,8 @@ def not_found(detail: str) -> HTTPException:
 def bad_gateway(detail: str) -> HTTPException:
     return HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=detail)
 
+
 def internal_server_error(detail: str) -> HTTPException:
-    return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=detail)
+    return HTTPException(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=detail
+    )
