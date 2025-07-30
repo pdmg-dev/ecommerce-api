@@ -1,40 +1,38 @@
 # app/repositories/order.py
 
 from sqlalchemy.orm import Session
-
+from sqlalchemy import select
 from app.models.cart_item import CartItem
-from app.models.order import Order, OrderItem, OrderStatus
-from app.models.product import Product
+from app.models.order import Order, OrderItem
 
 
 class OrderRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_user_cart_items(self, user_id: int):
-        return self.db.query(CartItem).filter_by(user_id=user_id).all()
-
-    def get_product_by_id(self, product_id: int):
-        return self.db.query(Product).filter_by(id=product_id).first()
-
-    def get_orders_by_user(self, user_id: int):
-        return (
-            self.db.query(Order)
-            .filter_by(user_id=user_id)
+    def get_order(self, user_id: int):
+        stmt = (
+            select(Order)
+            .where(Order.user_id == user_id)
             .order_by(Order.created_at.desc())
-            .all()
         )
+        return self.db.scalars(stmt).all()
+
+    def get_by_id(self, order_id: int):
+        stmt = select(Order).where(Order.id == order_id)
+        return self.db.scalars(stmt).one_or_none()
 
     def get_all_orders(self):
-        return self.db.query(Order).order_by(Order.created_at.desc()).all()
+        stmt = select(Order).order_by(Order.created_at.desc())
+        return self.db.scalars(stmt).all()
 
-    def create_order(self, user_id: int, total_price: float, items: list[OrderItem]):
-        order = Order(user_id=user_id, total_price=total_price, items=items)
+    def create_order(self, order: Order) -> Order:
         self.db.add(order)
+        self.db.flush()
         return order
 
-    def remove_user_cart(self, user_id: int):
-        self.db.query(CartItem).filter_by(user_id=user_id).delete()
+    def add_items(self, order_item: OrderItem) -> None:
+        return self.db.add(order_item)
 
     def commit(self):
         self.db.commit()
@@ -42,10 +40,7 @@ class OrderRepository:
     def refresh(self, instance):
         self.db.refresh(instance)
 
-    def get_order_by_id(self, order_id: int) -> Order:
-        return self.db.query(Order).filter_by(id=order_id).first()
-
-    def update_order_status(self, order: Order) -> Order:
+    def update_status(self, order: Order) -> Order:
         self.db.commit()
         self.db.refresh(order)
         return order
