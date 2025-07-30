@@ -1,6 +1,28 @@
-venv/
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+env/
 .env
+venv/
+
+# Pytest
+.pytest_cache/
+.coverage
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SQLite (optional)
 *.sqlite3
 *.db
 *.db-journal

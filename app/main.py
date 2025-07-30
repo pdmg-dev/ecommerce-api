@@ -19,7 +19,6 @@ app.include_router(webhook.router)
 app.include_router(order.router)
 
 
-
 @app.get("/")
 def root():
     return {"message": f"{settings.app_name} is up", "debug_mode": settings.debug}
