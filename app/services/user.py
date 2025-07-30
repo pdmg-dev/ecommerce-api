@@ -2,7 +2,7 @@
 
 from app.models.user import User
 from app.repositories.user import UserRepository
-from app.schemas.token import Token
+from app.schemas.token import EmailPayload, RefreshRequest, Token, TokenPair
 from app.schemas.user import UserCreate, UserLogin, UserRead
 from app.utils import auth, exceptions
 
@@ -33,4 +33,25 @@ class UserService:
             raise exceptions.unauthorized("Invalid email or password")
 
         access_token = auth.create_access_token({"sub": user.email})
-        return Token(access_token=access_token)
+        refresh_token = auth.create_refresh_token({"sub": user.email})
+        return TokenPair(access_token=access_token, refresh_token=refresh_token)
+
+    def refresh_access_token(self, refresh_request: RefreshRequest) -> TokenPair:
+        try:
+            payload = auth.decode_token(refresh_request.refresh_token)
+            if payload.get("scope") != "refresh_token":
+                raise exceptions.unauthorized("Invalid refresh token")
+
+            email_payload = EmailPayload(email=payload.get("sub"))
+            user = self.user_repository.get_by_email(email_payload.email)
+            if not user or not user.is_active:
+                raise exceptions.unauthorized("User no longer active")
+
+            new_access_token = auth.create_access_token({"sub": email_payload.email})
+            new_refresh_token = auth.create_refresh_token({"sub": email_payload.email})
+            return TokenPair(
+                access_token=new_access_token, refresh_token=new_refresh_token
+            )
+
+        except ValueError:
+            raise exceptions.unauthorized("Expired or invalid refresh token")

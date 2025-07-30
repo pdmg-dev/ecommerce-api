@@ -16,8 +16,7 @@ from app.services.order import OrderService
 from app.services.payment import PaymentService
 from app.services.product import ProductService
 from app.services.user import UserService
-from app.utils import exceptions
-from app.utils.auth import decode_access_token
+from app.utils import auth, exceptions
 
 
 # User Dependencies
@@ -36,7 +35,7 @@ def get_current_user(
     user_repository: UserRepository = Depends(get_user_repository),
 ) -> User:
     try:
-        payload = decode_access_token(token)
+        payload = auth.decode_token(token)
         email: str = payload.get("sub")
         if email is None:
             raise exceptions.unauthorized("Invalid token")

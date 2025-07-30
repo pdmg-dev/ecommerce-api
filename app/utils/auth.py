@@ -1,6 +1,6 @@
 # app/utils/auth.py
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Union
 
 from jose import JWTError, jwt
@@ -21,24 +21,34 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: dict, expires_delta: Union[int, None] = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(
-        minutes=expires_delta or settings.access_token_expire_minutes
+def create_access_token(data: dict, expires_minutes: int = None):
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=expires_minutes or settings.access_token_expire_minutes
     )
+    to_encode = data.copy()
     to_encode.update({"exp": expire})
-
-    encoded_jwt = jwt.encode(
+    return jwt.encode(
         to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
     )
-    return encoded_jwt
 
 
-def decode_access_token(token: str) -> dict:
+def create_refresh_token(data: dict, expires_days: int = None):
+    expire = datetime.now(timezone.utc) + timedelta(
+        days=expires_days or settings.refresh_token_expire_days
+    )
+
+    to_encode = data.copy()
+    to_encode.update({"exp": expire, "scope": "refresh_token"})
+
+    return jwt.encode(
+        to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
+    )
+
+
+def decode_token(token: str) -> dict:
     try:
-        payload = jwt.decode(
+        return jwt.decode(
             token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
         )
-        return payload
     except JWTError:
         raise ValueError("Invalid or expired token")
