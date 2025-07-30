@@ -1,6 +1,6 @@
 # app/repositories/cart_item.py
 
-from sqlalchemy import select, delete
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.models.cart_item import CartItem

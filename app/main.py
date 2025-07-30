@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from app.api import auth, cart, payment, product, webhook, order
+from app.api import auth, cart, order, payment, product, webhook
 from app.core.settings import get_settings
 from app.db.init_db import init_db
 

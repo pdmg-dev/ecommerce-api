@@ -1,7 +1,8 @@
 # app/repositories/order.py
 
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from app.models.cart_item import CartItem
 from app.models.order import Order, OrderItem
 

@@ -1,11 +1,12 @@
 # app/app/webhook.py
 
-from fastapi import APIRouter, Request, Depends
-from stripe import Webhook, SignatureVerificationError
-from app.core.settings import get_settings
-from app.utils import exceptions
-from app.services.order import OrderService
+from fastapi import APIRouter, Depends, Request
+from stripe import SignatureVerificationError, Webhook
+
 from app.core.dependencies import get_order_service
+from app.core.settings import get_settings
+from app.services.order import OrderService
+from app.utils import exceptions
 
 router = APIRouter(prefix="/webhook", tags=["Webhook"])
 

@@ -4,12 +4,8 @@ from fastapi import APIRouter, Depends, status
 
 from app.core.dependencies import get_product_service, require_admin
 from app.models.user import User
-from app.schemas.product import (
-    ProductCreate,
-    ProductPublicRead,
-    ProductRead,
-    ProductUpdate,
-)
+from app.schemas.product import (ProductCreate, ProductPublicRead, ProductRead,
+                                 ProductUpdate)
 from app.services.product import ProductService
 
 router = APIRouter(prefix="/products", tags=["Products"])

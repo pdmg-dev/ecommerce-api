@@ -2,12 +2,8 @@
 
 from app.models.product import Product
 from app.repositories.product import ProductRepository
-from app.schemas.product import (
-    ProductCreate,
-    ProductPublicRead,
-    ProductRead,
-    ProductUpdate,
-)
+from app.schemas.product import (ProductCreate, ProductPublicRead, ProductRead,
+                                 ProductUpdate)
 from app.utils import exceptions
 
 

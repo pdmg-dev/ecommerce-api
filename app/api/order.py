@@ -4,11 +4,11 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user, require_admin
+from app.core.dependencies import (get_current_user, get_order_service,
+                                   require_admin)
 from app.models.user import User
 from app.schemas.order import OrderRead, OrderUpdateStatus
 from app.services.order import OrderService
-from app.core.dependencies import get_order_service
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
