@@ -146,30 +146,30 @@ Access the interactive docs:
 - `GET /auth/refresh` – Automatic refresh of tokens
 
 **Products**
-`GET /products/` – View all available products
-`POST /products/` – Add product (Admin)
-`GET /products/{id}` – View product details
-`PATCH /products/{produc_id}` – Update product (Admin)
-`DELETE /products/{id}` – Delete product (Admin)
+- `GET /products/` – View all available products
+- `POST /products/` – Add product (Admin)
+- `GET /products/{id}` – View product details
+- `PATCH /products/{produc_id}` – Update product (Admin)
+- `DELETE /products/{id}` – Delete product (Admin)
 
 **Cart**
-`GET /cart/` – View current user cart
-`POST /cart/` – Add item to cart
-`PUT /cart/{product_id}` – Update cart item quantity
-`DELETE /cart/{product_id}` – Remove item from cart
+- `GET /cart/` – View current user cart
+- `POST /cart/` – Add item to cart
+- `PUT /cart/{product_id}` – Update cart item quantity
+- `DELETE /cart/{product_id}` – Remove item from cart
 
 **Payments (Stripe)**
-`POST /payment/checkout` – Create Stripe checkout session
-`GET /payment/success` – Successfull payment
-`GET /payment/cancel` – Cancelled pyment
+- `POST /payment/checkout` – Create Stripe checkout session
+- `GET /payment/success` – Successfull payment
+- `GET /payment/cancel` – Cancelled pyment
 
 **Webhook**
-`POST /webhook/stripe` – Handle Stripe webhook events (payment confirmation)
+- `POST /webhook/stripe` – Handle Stripe webhook events (payment confirmation)
 
 **Orders**
-`GET /orders` – View current user orders
-`GET /orders/all` – View all orders (Admin)
-`PATCH /orders/{id}` – Update order status (Admin)
+- `GET /orders` – View current user orders
+- `GET /orders/all` – View all orders (Admin)
+- `PATCH /orders/{id}` – Update order status (Admin)
 
 ![Ecommerce API Swagger UI](docs/ecommerce-api-Swagger-UI.png)
 
