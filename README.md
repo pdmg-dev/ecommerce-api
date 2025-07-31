@@ -140,31 +140,38 @@ Access the interactive docs:
 ## API Endpoints
 
 **Auth**
-- `POST /register` – Register a new user
-- `POST /login` – Login and receive JWT
-- `GET /me` – Get current logged-in user info
+- `POST /auth/register` – Register a new user
+- `POST /auth/login` – Login and receive JWT
+- `GET /auth/me` – Get current logged-in user info
+- `GET /auth/refresh` – Automatic refresh of tokens
 
 **Products**
-`POST /admin/products` – Add product (Admin)
-`PATCH /admin/products/{id}` – Update product (Admin)
-`DELETE /admin/products/{id}` – Delete product (Admin)
-`GET /products` – View all available products
+`GET /products/` – View all available products
+`POST /products/` – Add product (Admin)
 `GET /products/{id}` – View product details
+`PATCH /products/{produc_id}` – Update product (Admin)
+`DELETE /products/{id}` – Delete product (Admin)
 
 **Cart**
-`GET /cart` – View current user cart
-`POST /cart` – Add item to cart
-`PUT /cart/{item_id}` – Update cart item quantity
-`DELETE /cart/{item_id}` – Remove item from cart
-
-**Orders**
-`GET /orders` – View current user orders
-`GET /admin/orders` – View all orders (Admin)
-`PATCH /admin/orders/{id}` – Update order status (Admin)
+`GET /cart/` – View current user cart
+`POST /cart/` – Add item to cart
+`PUT /cart/{product_id}` – Update cart item quantity
+`DELETE /cart/{product_id}` – Remove item from cart
 
 **Payments (Stripe)**
 `POST /payment/checkout` – Create Stripe checkout session
-`POST /webhook` – Handle Stripe webhook events (payment confirmation)
+`GET /payment/success` – Successfull payment
+`GET /payment/cancel` – Cancelled pyment
+
+**Webhook**
+`POST /webhook/stripe` – Handle Stripe webhook events (payment confirmation)
+
+**Orders**
+`GET /orders` – View current user orders
+`GET /orders/all` – View all orders (Admin)
+`PATCH /orders/{id}` – Update order status (Admin)
+
+![Ecommerce API Swagger UI](docs/ecommerce-api-Swagger-UI.png)
 
 ## Testing
 
@@ -187,3 +194,4 @@ MIT License – Feel free to use this as a learning project.
 
 ## Project Source
 
+Built as part of the [roadmap.sh](https://roadmap.sh/projects/ecommerce-api) project series.
